@@ -1,0 +1,53 @@
+
+
+-- Dimension Tables
+CREATE TABLE dim_client (
+    client_id SERIAL PRIMARY KEY,
+    client_name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE dim_project (
+    project_id SERIAL PRIMARY KEY,
+    project_name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE dim_role (
+    role_id SERIAL PRIMARY KEY,
+    role_name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE dim_task (
+    task_id SERIAL PRIMARY KEY,
+    task_name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE dim_date (
+    date_id SERIAL PRIMARY KEY,
+    date TIMESTAMP NOT NULL UNIQUE
+);
+
+-- Fact Table
+CREATE TABLE fact_hours (
+    fact_id SERIAL PRIMARY KEY,
+    client_id INT REFERENCES dim_client(client_id),
+    project_id INT REFERENCES dim_project(project_id),
+    role_id INT REFERENCES dim_role(role_id),
+    task_id INT REFERENCES dim_task(task_id),
+    date_id INT REFERENCES dim_date(date_id),
+    total_hours_logged NUMERIC,
+    is_billable TEXT
+	
+);
+
+
+-- Meeting Fact Table
+CREATE TABLE meeting_fact_hours (
+    meeting_id SERIAL PRIMARY KEY,
+    client_id INT REFERENCES dim_client(client_id),
+    project_id INT REFERENCES dim_project(project_id),
+    task_id INT REFERENCES dim_task(task_id),
+    date_id INT REFERENCES dim_date(date_id),
+    meeting_duration NUMERIC,
+    is_billable TEXT
+	
+);

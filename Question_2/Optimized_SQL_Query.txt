@@ -1,0 +1,23 @@
+-- Add indexes to improve join and filtering performance
+CREATE INDEX idx_name_clickup ON ClickUp(Name);
+CREATE INDEX idx_name_float ON Float(Name);
+
+-- Optimized query
+SELECT
+    c.Name,
+    f.Role,
+    SUM(c.Hours) AS Total_Tracked_Hours,
+    SUM(f.Estimated_Hours) AS Total_Allocated_Hours,
+    c.Date
+FROM
+    ClickUp c
+JOIN
+    Float f
+ON
+    c.Name = f.Name
+GROUP BY
+    c.Name, f.Role, c.Date
+HAVING
+    SUM(c.Hours) > 100
+ORDER BY
+    Total_Allocated_Hours DESC;
